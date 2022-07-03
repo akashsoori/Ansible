@@ -1,0 +1,29 @@
+---
+# InstallWinMerge_Win_Role.yml
+- hosts: "{{ target }}"
+- name: Copy WinMerge Installer...
+  win_copy:
+    src: "{{ repository_root }}WinMerge\x2fWinMerge-{{ WinMerge_Version }}-Setup.exe"
+    dest: "{{ install_root }}WinMerge\\"
+- name: Installing WinMerge...
+  win_package:
+    path: "{{ install_root }}WinMerge\\WinMerge-{{ WinMerge_Version }}-Setup.exe"
+    product_id: WinMerge-{{ WinMerge_Version }}
+    arguments:
+      - /VERYSILENT
+      - /ALLUSERS
+      - /SP
+      - /LOG=C:\Temp\WinMerge_install_log.txt
+      - /DIR={{ install_root }}WinMerge
+      - /NORESTART
+    state: present
+- name: Delete WinMerge Installer...
+  win_file:
+    path: "{{ install_root }}WinMerge\\WinMerge-{{ WinMerge_Version }}-Setup.exe"
+    state: absent
+- name: Add WinMerge to PATH...
+  win_path:
+    name: PATH
+    elements: "{{ install_root }}apps\\WinMerge"
+    scope: machine
+    state: present
