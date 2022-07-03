@@ -1,0 +1,12 @@
+---
+- hosts: "{{ target }}"
+- name: Copy ProcessExplorer Installer...
+  win_copy:
+    src: "{{ repository_root }}ProcessExplorer\x2fProcessExplorer.zip"
+    dest: "{{ install_root }}software\\"
+- name: Unzip ProcessExplorer
+  win_unzip:
+    src: "{{ install_root }}software\\ProcessExplorer.zip"
+    dest: "{{ install_root }}ProcessExplorer\\"
+    recurse: no
+    delete_archive: yes
