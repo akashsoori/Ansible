@@ -1,0 +1,21 @@
+---
+- hosts: "{{ target }}"
+- name: Copy python Installer...
+  win_copy:
+    src: "{{ repository_root }}Python\x2fwin\x2fpython-{{ version_python }}-amd64.exe"
+    dest: C:\apps\Python{{ version_python_abreviated }}\
+- name: Install python...
+  win_package:
+    path: "{{ install_root }}Python{{ version_python_abreviated }}\\python-{{ version_python }}-amd64.exe"
+    product_id: python
+    arguments:
+      - /quiet
+      - TargetDir={{ install_root }}\Python{{ version_python_abreviated }}
+      - InstallAllUsers=1
+      - PrependPath=1
+      - Include_test=0
+    state: present
+- name: Delete python Installer...
+  win_file:
+    path: "{{ install_root }}Python{{ version_python_abreviated }}\\python-{{ version_python }}-amd64.exe"
+    state: absent
