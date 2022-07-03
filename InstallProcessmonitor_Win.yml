@@ -1,0 +1,11 @@
+---
+- hosts: "{{ target }}"
+- name: Copy ProcessMonitor Installer...
+  win_copy:
+    src: "{{ repository_root }}ProcessMonitor\x2fProcessMonitor.zip"
+    dest: "{{ install_root }}ProcessMonitor\\"
+- name: Installing Process Monitor...
+  win_unzip:
+    src: "{{ install_root }}ProcessMonitor\\ProcessMonitor.zip"
+    dest: "{{ install_root }}ProcessMonitor"
+    delete_archive: yes
