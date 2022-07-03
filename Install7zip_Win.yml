@@ -1,0 +1,18 @@
+---
+- hosts: "{{ target }}"
+- name: Copy 7-Zip Installer...
+  win_copy:
+      src: "{{ repository_root }}7-zip/7z{{ version_7z }}-x64.exe"
+      dest: "{{ install_root }}7-Zip\\"
+- name: Install 7-Zip...
+  win_package:
+    path: "{{ install_root }}7-Zip\\7z{{ version_7z }}-x64.exe"
+    product_id: 7-Zip
+    arguments:
+      - /S
+      - /D={{ install_root }}\7-Zip
+    state: present
+- name: Delete 7-Zip Installer...
+  win_file:
+    path: "{{ install_root }}7-Zip\\7z{{ version_7z}}-x64.exe"
+    state: absent
