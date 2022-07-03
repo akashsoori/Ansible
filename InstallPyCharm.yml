@@ -1,0 +1,38 @@
+---
+- hosts: "{{ target }}"
+- name: Copy PyCharm Installer...
+  win_copy:
+    src: "{{ repository_root }}PyCharm\x2fpycharm-community-{{ PyCharm_Version }}.exe"
+    dest: "{{ install_root }}software\\PyCharm\\"
+- name: copy the configuration win_file
+  win_copy:
+    src: files/silent.config
+    dest: "{{ install_root }}software\\PyCharm\\"
+- name: Install PyCharm
+  win_package:
+    path: "{{ install_root }}software\\PyCharm\\pycharm-community-{{ PyCharm_Version }}.exe"
+    product_id: PyCharm-{{ PyCharm_Version }}
+    arguments:
+      - /S
+      - /CONFIG={{ install_root }}software\PyCharm\silent.config
+      - /D={{ install_root }}PyCharm
+    state: present
+    #become_method: runas
+    #become: yes
+    #become_user: Administrator
+    #vars:
+      #ansible_become_pass: "{{ admin_pw }}"
+- name: Delete PyCharm Installer...
+  win_file:
+    path: "{{ install_root }}software\\PyCharm\\pycharm-community-{{ PyCharm_Version }}.exe"
+    state: absent
+- name: Delete the config files
+  win_file:
+    path: "{{ install_root }}software\\PyCharm\\silent.config"
+    state: absent
+- name: Add PyCharm Community Edition Env Variable...
+  win_path:
+    name: PyCharm Community Edition
+    elements: "{{ install_root }}PyCharm\\bin"
+    scope: user
+    state: present
