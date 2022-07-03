@@ -1,0 +1,33 @@
+---
+- hosts: "{{ target }}"
+- name: Copy chrome Installer...
+  win_copy:
+    src: '{{ repository_root }}chrome/win/{{ chrome_version }}/Installers/GoogleChromeStandaloneEnterprise64.msi'
+    dest: '{{ install_root }}Chrome\Installers\'
+- name: Copy chrome Installer (Legacy Browser)...
+  win_copy:
+    src: '{{ repository_root }}chrome/win/{{ chrome_version }}/Installers/LegacyBrowserSupport_5.9.0.0_en_x64.msi'
+    dest: '{{ install_root }}Chrome\Installers\'
+- name: Copy chrome Installer (EndPoint Verification)...
+  win_copy:
+    src: '{{ repository_root }}chrome/win/{{ chrome_version }}/Installers/EndpointVerification_0.4.21.msi'
+    dest: '{{ install_root }}Chrome\Installers\'
+- name: Install Chrome...
+  win_package:
+    path: "{{ install_root }}Chrome\\Installers\\GoogleChromeStandaloneEnterprise64.msi"
+    product_id: Chrome
+    state: present
+- name: Install Chrome (Legacy Browser Support)...
+  win_package:
+    path: "{{ install_root}}Chrome\\Installers\\LegacyBrowserSupport_5.9.0.0_en_x64.msi"
+    product_id: Chrome
+    state: present
+- name: Install Chrome (Endpoint Verification)...
+  win_package:
+    path: "{{ install_root }}Chrome\\Installers\\EndpointVerification_0.4.21.msi"
+    product_id: Chrome
+    state: present
+- name: Delete Chrome Installer...
+  win_file:
+    path: "{{ install_root}}Chrome\\Installers\\"
+    state: absent
